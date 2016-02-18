@@ -1,22 +1,27 @@
-package com.udacity.gradle.builditbigger;
+package com.udacity.gradle.builditbigger.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.amrendra.displaylibrary.JokeDisplayActivity;
-import com.amrendra.laughter.JokeProvider;
+import com.udacity.gradle.builditbigger.R;
+import com.udacity.gradle.builditbigger.handler.JokeHandler;
+import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 
 
 public class MainActivity extends ActionBarActivity {
+
+
+    JokeHandler mJokeHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mJokeHandler = new JokeHandler(this);
     }
 
 
@@ -43,10 +48,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void tellJoke(View view) {
-        String joke = JokeProvider.getJoke();
+/*        String joke = JokeProvider.getJoke();
         Intent intent = new Intent(MainActivity.this, JokeDisplayActivity.class);
         intent.putExtra(JokeDisplayActivity.JOKE_DISPLAY_INTENT, joke);
-        startActivity(intent);
+        startActivity(intent);*/
+        new FetchJokeTask(mJokeHandler).execute();
     }
 
 
