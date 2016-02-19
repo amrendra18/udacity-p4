@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.udacity.gradle.builditbigger.R;
 import com.udacity.gradle.builditbigger.handler.JokeHandler;
+import com.udacity.gradle.builditbigger.task.Debug;
 import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 
 
@@ -20,7 +21,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mJokeHandler = new JokeHandler(this);
     }
 
@@ -48,10 +48,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void tellJoke(View view) {
-/*        String joke = JokeProvider.getJoke();
-        Intent intent = new Intent(MainActivity.this, JokeDisplayActivity.class);
-        intent.putExtra(JokeDisplayActivity.JOKE_DISPLAY_INTENT, joke);
-        startActivity(intent);*/
+        Debug.i("Joke Clicked", false);
         new FetchJokeTask(mJokeHandler).execute();
     }
 

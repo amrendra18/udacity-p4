@@ -1,8 +1,6 @@
 package com.udacity.gradle.builditbigger.task;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.util.Pair;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -15,16 +13,17 @@ import java.io.IOException;
 /**
  * Created by Amrendra Kumar on 19/02/16.
  */
-public class FetchJokeTask extends AsyncTask<Pair<Context, String>, Void, String> {
+public class FetchJokeTask extends AsyncTask<Void, Void, String> {
     private static MyApi myApiService = null;
-    private JokeListener mJokeListener;
+    private JokeListener mJokeListener = null;
 
     public FetchJokeTask(JokeListener jokeListener) {
         mJokeListener = jokeListener;
     }
 
     @Override
-    protected String doInBackground(Pair<Context, String>... params) {
+    protected String doInBackground(Void... params) {
+        Debug.c();
         if (myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
@@ -52,6 +51,7 @@ public class FetchJokeTask extends AsyncTask<Pair<Context, String>, Void, String
 
     @Override
     protected void onPostExecute(String result) {
+        Debug.c();
         mJokeListener.jokeLoaded(result);
     }
 

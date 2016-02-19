@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.amrendra.displaylibrary.JokeDisplayActivity;
+import com.udacity.gradle.builditbigger.task.Debug;
 import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 
 /**
@@ -19,6 +20,7 @@ public class JokeHandler implements FetchJokeTask.JokeListener {
 
     @Override
     public void jokeLoaded(String joke) {
+        Debug.i("Joke Loaded : " + joke, false);
         Intent intent = new Intent(mContext, JokeDisplayActivity.class);
         intent.putExtra(JokeDisplayActivity.JOKE_DISPLAY_INTENT, joke);
         mContext.startActivity(intent);
