@@ -1,4 +1,4 @@
-package com.udacity.gradle.builditbigger.task;
+package com.udacity.gradle.builditbigger.logger;
 
 import android.content.Context;
 import android.content.Intent;

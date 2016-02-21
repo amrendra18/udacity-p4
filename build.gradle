@@ -12,6 +12,12 @@ buildscript {
     }
 }
 
+task setupServerAndTest() {
+    dependsOn ':backend:appengineRun'
+    dependsOn ':app:connectedAndroidTest'
+    dependsOn ':backend:appengineStop'
+}
+
 allprojects {
     repositories {
         jcenter()

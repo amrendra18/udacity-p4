@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 
 import com.udacity.gradle.builditbigger.R;
 import com.udacity.gradle.builditbigger.handler.JokeHandler;
-import com.udacity.gradle.builditbigger.task.Debug;
+import com.udacity.gradle.builditbigger.logger.Debug;
 import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 
 

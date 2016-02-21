@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.amrendra.displaylibrary.JokeDisplayActivity;
-import com.udacity.gradle.builditbigger.task.Debug;
+import com.udacity.gradle.builditbigger.logger.Debug;
 import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 
 /**
