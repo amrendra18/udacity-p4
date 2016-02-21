@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.udacity.gradle.builditbigger.R;
 import com.udacity.gradle.builditbigger.handler.JokeHandler;
@@ -16,12 +17,14 @@ public class MainActivity extends ActionBarActivity {
 
 
     JokeHandler mJokeHandler;
+    ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mJokeHandler = new JokeHandler(this);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mJokeHandler = new JokeHandler(this, mProgressBar);
     }
 
 
@@ -49,6 +52,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void tellJoke(View view) {
         Debug.i("Joke Clicked", false);
+        mProgressBar.setVisibility(View.VISIBLE);
         new FetchJokeTask(mJokeHandler).execute();
     }
 
