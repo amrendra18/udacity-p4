@@ -25,13 +25,6 @@ public class FetchJokeTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         Debug.c();
-        //For debug purpose, to test possible scenarios with ad mob
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Debug.c();
         if (myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)

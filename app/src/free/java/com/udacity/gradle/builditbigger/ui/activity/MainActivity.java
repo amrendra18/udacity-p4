@@ -18,6 +18,7 @@ import com.udacity.gradle.builditbigger.bus.BusProvider;
 import com.udacity.gradle.builditbigger.event.JokeLoadedEvent;
 import com.udacity.gradle.builditbigger.logger.Debug;
 import com.udacity.gradle.builditbigger.task.FetchJokeTask;
+import com.udacity.gradle.builditbigger.utils.JokeConstants;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -34,6 +35,18 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mProgressBar = (LinearLayout) findViewById(R.id.progressLayout);
+        if (savedInstanceState != null) {
+            Debug.bundle(savedInstanceState);
+            jokeRequested = savedInstanceState.getBoolean(JokeConstants.JOKE_REQUESTED,
+                    false);
+            forceShowJoke = savedInstanceState.getBoolean(JokeConstants.FORCE_SHOW_JOKE,
+                    false);
+            advShown = savedInstanceState.getBoolean(JokeConstants.ADV_SHOWN, false);
+            mJoke = savedInstanceState.getString(JokeConstants.JOKE);
+        }
+        if (jokeRequested) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
         BusProvider.getInstance().register(this);
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getString(R.string.banner_ad_unit_id));
@@ -59,8 +72,9 @@ public class MainActivity extends ActionBarActivity {
                 showJoke();
             }
         });
-
-        requestNewInterstitial();
+        if (!jokeRequested) {
+            requestNewInterstitial();
+        }
     }
 
 
@@ -153,5 +167,16 @@ public class MainActivity extends ActionBarActivity {
     public void onDestroy() {
         super.onDestroy();
         BusProvider.getInstance().unregister(this);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean(JokeConstants.JOKE_REQUESTED, jokeRequested);
+        savedInstanceState.putBoolean(JokeConstants.FORCE_SHOW_JOKE, forceShowJoke);
+        savedInstanceState.putBoolean(JokeConstants.ADV_SHOWN, advShown);
+        savedInstanceState.putString(JokeConstants.JOKE, mJoke);
+        Debug.bundle(savedInstanceState);
+        super.onSaveInstanceState(savedInstanceState);
     }
 }

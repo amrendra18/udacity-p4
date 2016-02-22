@@ -91,7 +91,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
         savedInstanceState.putBoolean(JokeConstants.JOKE_REQUESTED, jokeRequested);
         super.onSaveInstanceState(savedInstanceState);
     }
