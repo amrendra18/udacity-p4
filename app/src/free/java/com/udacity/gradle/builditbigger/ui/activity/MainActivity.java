@@ -20,7 +20,6 @@ import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 public class MainActivity extends ActionBarActivity implements FetchJokeTask.JokeListener {
 
     InterstitialAd mInterstitialAd;
-    //JokeHandler mJokeHandler;
     ProgressBar mProgressBar;
     String mJoke;
     boolean advShown;
@@ -30,8 +29,6 @@ public class MainActivity extends ActionBarActivity implements FetchJokeTask.Jok
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        //mJokeHandler = new JokeHandler(this, mProgressBar);
-
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getString(R.string.banner_ad_unit_id));
 
@@ -39,15 +36,11 @@ public class MainActivity extends ActionBarActivity implements FetchJokeTask.Jok
             @Override
             public void onAdClosed() {
                 Debug.e("Adv closed ", false);
-                requestNewInterstitial();
-                if (mJoke != null) {
-                    showJoke();
-                }
+                showJoke();
             }
 
             @Override
             public void onAdLoaded() {
-                super.onAdLoaded();
                 Debug.c();
                 if (!advShown) {
                     showAdv();
@@ -57,10 +50,7 @@ public class MainActivity extends ActionBarActivity implements FetchJokeTask.Jok
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 Debug.e("Adv failed : " + errorCode, false);
-                requestNewInterstitial();
-                if (mJoke != null) {
-                    showJoke();
-                }
+                showJoke();
             }
         });
 
@@ -121,11 +111,14 @@ public class MainActivity extends ActionBarActivity implements FetchJokeTask.Jok
     }
 
     private void showJoke() {
-        Debug.i("Going to show the Joke Loaded : " + mJoke, false);
-        mProgressBar.setVisibility(View.GONE);
-        Intent intent = new Intent(this, JokeDisplayActivity.class);
-        intent.putExtra(JokeDisplayActivity.JOKE_DISPLAY_INTENT, mJoke);
-        startActivity(intent);
+        requestNewInterstitial();
+        if (mJoke != null) {
+            Debug.i("Going to show the Joke Loaded : " + mJoke, false);
+            mProgressBar.setVisibility(View.GONE);
+            Intent intent = new Intent(this, JokeDisplayActivity.class);
+            intent.putExtra(JokeDisplayActivity.JOKE_DISPLAY_INTENT, mJoke);
+            startActivity(intent);
+        }
         mJoke = null;
         advShown = true;
     }
