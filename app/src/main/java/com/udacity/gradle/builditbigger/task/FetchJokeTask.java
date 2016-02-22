@@ -53,7 +53,9 @@ public class FetchJokeTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         Debug.c();
-        mJokeListener.jokeLoaded(result);
+        if (mJokeListener != null) {
+            mJokeListener.jokeLoaded(result);
+        }
     }
 
     public interface JokeListener {

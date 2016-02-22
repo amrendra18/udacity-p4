@@ -1,5 +1,6 @@
 package com.udacity.gradle.builditbigger.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -7,26 +8,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.amrendra.displaylibrary.JokeDisplayActivity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.udacity.gradle.builditbigger.R;
-import com.udacity.gradle.builditbigger.handler.JokeHandler;
+import com.udacity.gradle.builditbigger.logger.Debug;
 import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements FetchJokeTask.JokeListener {
 
     InterstitialAd mInterstitialAd;
-    JokeHandler mJokeHandler;
+    //JokeHandler mJokeHandler;
     ProgressBar mProgressBar;
+    String mJoke;
+    boolean advShown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mJokeHandler = new JokeHandler(this, mProgressBar);
+        //mJokeHandler = new JokeHandler(this, mProgressBar);
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getString(R.string.banner_ad_unit_id));
@@ -34,7 +38,29 @@ public class MainActivity extends ActionBarActivity {
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
+                Debug.e("Adv closed ", false);
                 requestNewInterstitial();
+                if (mJoke != null) {
+                    showJoke();
+                }
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                Debug.c();
+                if (!advShown) {
+                    showAdv();
+                }
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                Debug.e("Adv failed : " + errorCode, false);
+                requestNewInterstitial();
+                if (mJoke != null) {
+                    showJoke();
+                }
             }
         });
 
@@ -73,11 +99,34 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void tellJoke(View view) {
-        mProgressBar.setVisibility(View.VISIBLE);
+    public void showAdv() {
         if (mInterstitialAd.isLoaded()) {
+            advShown = true;
             mInterstitialAd.show();
         }
-        new FetchJokeTask(mJokeHandler).execute();
+    }
+
+    public void tellJoke(View view) {
+        mProgressBar.setVisibility(View.VISIBLE);
+        advShown = false;
+        showAdv();
+        mJoke = null;
+        new FetchJokeTask(this).execute();
+    }
+
+    @Override
+    public void jokeLoaded(String joke) {
+        Debug.i("Joke Loaded : " + joke, false);
+        mJoke = joke;
+    }
+
+    private void showJoke() {
+        Debug.i("Going to show the Joke Loaded : " + mJoke, false);
+        mProgressBar.setVisibility(View.GONE);
+        Intent intent = new Intent(this, JokeDisplayActivity.class);
+        intent.putExtra(JokeDisplayActivity.JOKE_DISPLAY_INTENT, mJoke);
+        startActivity(intent);
+        mJoke = null;
+        advShown = true;
     }
 }
