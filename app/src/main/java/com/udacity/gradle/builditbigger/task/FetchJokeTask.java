@@ -7,6 +7,8 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
+import com.udacity.gradle.builditbigger.bus.BusProvider;
+import com.udacity.gradle.builditbigger.event.JokeLoadedEvent;
 import com.udacity.gradle.builditbigger.logger.Debug;
 
 import java.io.IOException;
@@ -16,14 +18,18 @@ import java.io.IOException;
  */
 public class FetchJokeTask extends AsyncTask<Void, Void, String> {
     private static MyApi myApiService = null;
-    private JokeListener mJokeListener = null;
 
-    public FetchJokeTask(JokeListener jokeListener) {
-        mJokeListener = jokeListener;
+    public FetchJokeTask() {
     }
 
     @Override
     protected String doInBackground(Void... params) {
+        Debug.c();
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Debug.c();
         if (myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
@@ -53,12 +59,6 @@ public class FetchJokeTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         Debug.c();
-        if (mJokeListener != null) {
-            mJokeListener.jokeLoaded(result);
-        }
-    }
-
-    public interface JokeListener {
-        void jokeLoaded(String joke);
+        BusProvider.getInstance().post(new JokeLoadedEvent(result));
     }
 }

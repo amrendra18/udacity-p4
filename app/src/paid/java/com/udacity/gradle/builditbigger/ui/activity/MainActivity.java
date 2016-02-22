@@ -9,12 +9,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.amrendra.displaylibrary.JokeDisplayActivity;
+import com.squareup.otto.Subscribe;
 import com.udacity.gradle.builditbigger.R;
+import com.udacity.gradle.builditbigger.bus.BusProvider;
+import com.udacity.gradle.builditbigger.event.JokeLoadedEvent;
 import com.udacity.gradle.builditbigger.logger.Debug;
 import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 
 
-public class MainActivity extends ActionBarActivity implements FetchJokeTask.JokeListener {
+public class MainActivity extends ActionBarActivity {
     ProgressBar mProgressBar;
 
     @Override
@@ -22,6 +25,7 @@ public class MainActivity extends ActionBarActivity implements FetchJokeTask.Jok
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        BusProvider.getInstance().register(this);
     }
 
 
@@ -50,16 +54,23 @@ public class MainActivity extends ActionBarActivity implements FetchJokeTask.Jok
     public void tellJoke(View view) {
         Debug.i("Joke Clicked", false);
         mProgressBar.setVisibility(View.VISIBLE);
-        new FetchJokeTask(this).execute();
+        new FetchJokeTask().execute();
     }
 
 
-    @Override
-    public void jokeLoaded(String joke) {
+    @Subscribe
+    public void jokeLoaded(JokeLoadedEvent event) {
+        String joke = event.getJoke();
         Debug.i("Going to show the Joke Loaded : " + joke, false);
         mProgressBar.setVisibility(View.GONE);
         Intent intent = new Intent(this, JokeDisplayActivity.class);
         intent.putExtra(JokeDisplayActivity.JOKE_DISPLAY_INTENT, joke);
         startActivity(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BusProvider.getInstance().unregister(this);
     }
 }

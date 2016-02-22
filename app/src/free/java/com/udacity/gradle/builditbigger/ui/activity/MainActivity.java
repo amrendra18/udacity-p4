@@ -12,23 +12,28 @@ import com.amrendra.displaylibrary.JokeDisplayActivity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.squareup.otto.Subscribe;
 import com.udacity.gradle.builditbigger.R;
+import com.udacity.gradle.builditbigger.bus.BusProvider;
+import com.udacity.gradle.builditbigger.event.JokeLoadedEvent;
 import com.udacity.gradle.builditbigger.logger.Debug;
 import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 
 
-public class MainActivity extends ActionBarActivity implements FetchJokeTask.JokeListener {
+public class MainActivity extends ActionBarActivity {
 
     InterstitialAd mInterstitialAd;
     ProgressBar mProgressBar;
     String mJoke;
     boolean advShown;
+    boolean forceShowJoke;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        BusProvider.getInstance().register(this);
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getString(R.string.banner_ad_unit_id));
 
@@ -97,29 +102,58 @@ public class MainActivity extends ActionBarActivity implements FetchJokeTask.Jok
     }
 
     public void tellJoke(View view) {
+        Debug.c();
         mProgressBar.setVisibility(View.VISIBLE);
         advShown = false;
         showAdv();
         mJoke = null;
-        new FetchJokeTask(this).execute();
+        forceShowJoke = false;
+        new FetchJokeTask().execute();
     }
 
-    @Override
-    public void jokeLoaded(String joke) {
+    @Subscribe
+    public void jokeLoaded(JokeLoadedEvent event) {
+        String joke = event.getJoke();
         Debug.i("Joke Loaded : " + joke, false);
         mJoke = joke;
+        if (forceShowJoke) {
+            showJoke();
+        }
     }
 
     private void showJoke() {
-        requestNewInterstitial();
+        Debug.c();
         if (mJoke != null) {
+            requestNewInterstitial();
             Debug.i("Going to show the Joke Loaded : " + mJoke, false);
             mProgressBar.setVisibility(View.GONE);
             Intent intent = new Intent(this, JokeDisplayActivity.class);
             intent.putExtra(JokeDisplayActivity.JOKE_DISPLAY_INTENT, mJoke);
             startActivity(intent);
+            mJoke = null;
+            advShown = true;
+            forceShowJoke = false;
+        } else {
+            //adv was closed but we dont have joke yet
+            Debug.e("Joke not ready, but adv closed", false);
+            forceShowJoke = true;
         }
-        mJoke = null;
-        advShown = true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BusProvider.getInstance().unregister(this);
     }
 }
+
+/*
+
+Handle cases:
+
+1. Adv is loaded before
+    a) user closes it before joke is loaded
+    b) user closes it after joke is loaded
+
+2. Joke is loaded, but adv is not loaded
+ */
