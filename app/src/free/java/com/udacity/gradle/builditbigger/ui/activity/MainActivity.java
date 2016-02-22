@@ -27,6 +27,7 @@ public class MainActivity extends ActionBarActivity {
     String mJoke;
     boolean advShown;
     boolean forceShowJoke;
+    boolean jokeRequested;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,12 +104,17 @@ public class MainActivity extends ActionBarActivity {
 
     public void tellJoke(View view) {
         Debug.c();
-        mProgressBar.setVisibility(View.VISIBLE);
-        advShown = false;
-        showAdv();
-        mJoke = null;
-        forceShowJoke = false;
-        new FetchJokeTask().execute();
+        if (!jokeRequested) {
+            jokeRequested = true;
+            mProgressBar.setVisibility(View.VISIBLE);
+            advShown = false;
+            showAdv();
+            mJoke = null;
+            forceShowJoke = false;
+            new FetchJokeTask().execute();
+        } else {
+            Debug.showToastShort(getString(R.string.please_wait), this, true);
+        }
     }
 
     @Subscribe
@@ -133,6 +139,7 @@ public class MainActivity extends ActionBarActivity {
             mJoke = null;
             advShown = true;
             forceShowJoke = false;
+            jokeRequested = false;
         } else {
             //adv was closed but we dont have joke yet
             Debug.e("Joke not ready, but adv closed", false);
@@ -146,14 +153,3 @@ public class MainActivity extends ActionBarActivity {
         BusProvider.getInstance().unregister(this);
     }
 }
-
-/*
-
-Handle cases:
-
-1. Adv is loaded before
-    a) user closes it before joke is loaded
-    b) user closes it after joke is loaded
-
-2. Joke is loaded, but adv is not loaded
- */
