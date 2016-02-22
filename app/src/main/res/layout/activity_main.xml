@@ -11,11 +11,23 @@
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_main"/>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <LinearLayout
+        android:id="@+id/progressLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_joke"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
 
 </FrameLayout>

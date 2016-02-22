@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 
 import com.amrendra.displaylibrary.JokeDisplayActivity;
 import com.google.android.gms.ads.AdListener;
@@ -23,7 +23,7 @@ import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 public class MainActivity extends ActionBarActivity {
 
     InterstitialAd mInterstitialAd;
-    ProgressBar mProgressBar;
+    LinearLayout mProgressBar;
     String mJoke;
     boolean advShown;
     boolean forceShowJoke;
@@ -32,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar = (LinearLayout) findViewById(R.id.progressLayout);
         BusProvider.getInstance().register(this);
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getString(R.string.banner_ad_unit_id));

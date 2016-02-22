@@ -26,7 +26,7 @@ public class FetchJokeTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         Debug.c();
         try {
-            Thread.sleep(10000);
+            Thread.sleep(30000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

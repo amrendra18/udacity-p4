@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 
 import com.amrendra.displaylibrary.JokeDisplayActivity;
 import com.squareup.otto.Subscribe;
@@ -18,13 +18,14 @@ import com.udacity.gradle.builditbigger.task.FetchJokeTask;
 
 
 public class MainActivity extends ActionBarActivity {
-    ProgressBar mProgressBar;
+    LinearLayout mProgressBar;
+    boolean jokeRequested;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar = (LinearLayout) findViewById(R.id.progressLayout);
         BusProvider.getInstance().register(this);
     }
 
@@ -53,13 +54,19 @@ public class MainActivity extends ActionBarActivity {
 
     public void tellJoke(View view) {
         Debug.i("Joke Clicked", false);
-        mProgressBar.setVisibility(View.VISIBLE);
-        new FetchJokeTask().execute();
+        if (!jokeRequested) {
+            mProgressBar.setVisibility(View.VISIBLE);
+            jokeRequested = true;
+            new FetchJokeTask().execute();
+        } else {
+            Debug.showToastShort(getString(R.string.please_wait), this, true);
+        }
     }
 
 
     @Subscribe
     public void jokeLoaded(JokeLoadedEvent event) {
+        jokeRequested = false;
         String joke = event.getJoke();
         Debug.i("Going to show the Joke Loaded : " + joke, false);
         mProgressBar.setVisibility(View.GONE);
