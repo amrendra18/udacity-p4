@@ -15,6 +15,7 @@ import com.udacity.gradle.builditbigger.bus.BusProvider;
 import com.udacity.gradle.builditbigger.event.JokeLoadedEvent;
 import com.udacity.gradle.builditbigger.logger.Debug;
 import com.udacity.gradle.builditbigger.task.FetchJokeTask;
+import com.udacity.gradle.builditbigger.utils.JokeConstants;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -24,8 +25,15 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            jokeRequested = savedInstanceState.getBoolean(JokeConstants.JOKE_REQUESTED,
+                    false);
+        }
         setContentView(R.layout.activity_main);
         mProgressBar = (LinearLayout) findViewById(R.id.progressLayout);
+        if (jokeRequested) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
         BusProvider.getInstance().register(this);
     }
 
@@ -79,5 +87,12 @@ public class MainActivity extends ActionBarActivity {
     public void onDestroy() {
         super.onDestroy();
         BusProvider.getInstance().unregister(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putBoolean(JokeConstants.JOKE_REQUESTED, jokeRequested);
+        super.onSaveInstanceState(savedInstanceState);
     }
 }
