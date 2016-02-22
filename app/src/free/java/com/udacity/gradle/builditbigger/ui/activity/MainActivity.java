@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onAdLoaded() {
                 Debug.c();
-                if (!advShown) {
+                if (!advShown && jokeRequested) {
                     showAdv();
                 }
             }
@@ -129,21 +129,23 @@ public class MainActivity extends ActionBarActivity {
 
     private void showJoke() {
         Debug.c();
-        if (mJoke != null) {
-            requestNewInterstitial();
-            Debug.i("Going to show the Joke Loaded : " + mJoke, false);
-            mProgressBar.setVisibility(View.GONE);
-            Intent intent = new Intent(this, JokeDisplayActivity.class);
-            intent.putExtra(JokeDisplayActivity.JOKE_DISPLAY_INTENT, mJoke);
-            startActivity(intent);
-            mJoke = null;
-            advShown = true;
-            forceShowJoke = false;
-            jokeRequested = false;
-        } else {
-            //adv was closed but we dont have joke yet
-            Debug.e("Joke not ready, but adv closed", false);
-            forceShowJoke = true;
+        if (jokeRequested) {
+            if (mJoke != null) {
+                requestNewInterstitial();
+                Debug.i("Going to show the Joke Loaded : " + mJoke, false);
+                mProgressBar.setVisibility(View.GONE);
+                Intent intent = new Intent(this, JokeDisplayActivity.class);
+                intent.putExtra(JokeDisplayActivity.JOKE_DISPLAY_INTENT, mJoke);
+                startActivity(intent);
+                mJoke = null;
+                advShown = true;
+                forceShowJoke = false;
+                jokeRequested = false;
+            } else {
+                //adv was closed but we dont have joke yet
+                Debug.e("Joke not ready, but adv closed", false);
+                forceShowJoke = true;
+            }
         }
     }
 
