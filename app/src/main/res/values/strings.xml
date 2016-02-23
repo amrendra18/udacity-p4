@@ -3,9 +3,6 @@
     <string name="instructions" translatable="false">Press the button for a delicious joke!</string>
     <string name="button_text" translatable="false">Tell Joke</string>
     <string name="action_settings" translatable="false">Settings</string>
-    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111
-    </string>
-    <string name="my_test_device" translatable="false">263AC223A6195432D722221A0FEC3534</string>
     <string name="loading_joke" translatable="false">Please wait while joke is retrieved!!</string>
     <string name="please_wait" translatable="false">We understand your excitement ;-)</string>
 </resources>

@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
         }
         BusProvider.getInstance().register(this);
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getString(R.string.banner_ad_unit_id));
+        mInterstitialAd.setAdUnitId(getString(R.string.interstital_ad_unit_id));
 
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
@@ -69,7 +69,11 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 Debug.e("Adv failed : " + errorCode, false);
-                showJoke();
+                if (errorCode == 0) {
+                    showJoke();
+                } else {
+                    forceShowJoke = true;
+                }
             }
         });
         if (!jokeRequested) {
@@ -81,7 +85,6 @@ public class MainActivity extends ActionBarActivity {
     private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice(getString(R.string.my_test_device))
                 .build();
         mInterstitialAd.loadAd(adRequest);
     }
@@ -114,7 +117,6 @@ public class MainActivity extends ActionBarActivity {
             advShown = false;
             showAdv();
             mJoke = null;
-            forceShowJoke = false;
             new FetchJokeTask().execute();
         } else {
             Debug.showToastShort(getString(R.string.please_wait), this, true);
