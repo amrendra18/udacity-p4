@@ -1,5 +1,19 @@
 apply plugin: 'com.android.application'
 
+def localServer = (System.getenv().containsKey("MY_LOCAL_MACHINE"))
+
+def RELEASE_KEYSTORE_FILE = "COPY_YOUR_KEYSTORE_FILE_PATH_HERE";
+def RELEASE_STORE_PASSWORD = "COPY_YOUR_KEYSTORE_PASSWORD_HERE";
+def RELEASE_KEY_ALIAS = "COPY_YOUR_KEY_ALIAS_HERE";
+def RELEASE_KEY_PASSWORD = "COPY_YOUR_KEY_PASSWORD_HERE";
+
+if (localServer) {
+    RELEASE_KEYSTORE_FILE = ANDROID_RELEASE_KEYSTORE_FILE;
+    RELEASE_STORE_PASSWORD = ANDROID_RELEASE_STORE_PASSWORD;
+    RELEASE_KEY_ALIAS = ANDROID_RELEASE_KEY_ALIAS;
+    RELEASE_KEY_PASSWORD = ANDROID_RELEASE_KEY_PASSWORD
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -14,10 +28,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(ANDROID_RELEASE_KEYSTORE_FILE)
-            storePassword ANDROID_RELEASE_STORE_PASSWORD
-            keyAlias ANDROID_RELEASE_KEY_ALIAS
-            keyPassword ANDROID_RELEASE_KEY_PASSWORD
+            storeFile file(RELEASE_KEYSTORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
         }
     }
 
