@@ -2,6 +2,16 @@
 
 Joke telling app, made as part of Udacity : Build-It-Bigger
 
+## Preview
+
+![Preview Free Demo](../master/raw/free.gif)
+![Preview Free Demo](../master/raw/paid.gif)
+
+
+Free Version Demo [here](https://www.youtube.com/watch?v=Mfto30bYLY8)
+
+Paid Version Demo [here](https://www.youtube.com/watch?v=XlEDAURrJIg)
+
 ## App Architecture
 
 ![Preview](../master/raw/architecture.png)
@@ -25,6 +35,6 @@ def RELEASE_KEY_PASSWORD = "COPY_YOUR_KEY_PASSWORD_HERE";
 **Add your ad mob ids in app/src/free/res/values/strings.xml**
 
 
-## Preview
+
 
 
