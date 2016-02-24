@@ -6,13 +6,21 @@ Joke telling app, made as part of Udacity : Build-It-Bigger
 
 ![Preview](../master/raw/architecture.png)
 
+Image credit [udacity](https://www.udacity.com)
+
 ## Add keys
 For developers out there,
+
 **Add your apk releease signing info in app/build.gradle**
+
 def RELEASE_KEYSTORE_FILE = "COPY_YOUR_KEYSTORE_FILE_PATH_HERE";
+
 def RELEASE_STORE_PASSWORD = "COPY_YOUR_KEYSTORE_PASSWORD_HERE";
+
 def RELEASE_KEY_ALIAS = "COPY_YOUR_KEY_ALIAS_HERE";
+
 def RELEASE_KEY_PASSWORD = "COPY_YOUR_KEY_PASSWORD_HERE";
+
 
 **Add your ad mob ids in app/src/free/res/values/strings.xml**
 
