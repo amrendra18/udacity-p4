@@ -12,10 +12,33 @@ buildscript {
     }
 }
 
-task setupServerAndTest() {
+task startServer {
     dependsOn ':backend:appengineRun'
-    dependsOn ':app:connectedAndroidTest'
+}
+
+task stopServer {
     dependsOn ':backend:appengineStop'
+}
+
+task runTests{
+    dependsOn ':app:connectedAndroidTest'
+    // :app:connectedAndroidTest takes a lot of time to execute
+    // :app:connectedFreeDebugAndroidTest can be used.
+}
+
+runTests.mustRunAfter(startServer)
+stopServer.mustRunAfter(runTests)
+
+task setupServerAndTest {
+    doFirst {
+        println "starting setupServerAndTest"
+    }
+    dependsOn startServer
+    dependsOn runTests
+    dependsOn stopServer
+    doLast {
+        println "complete setupServerAndTest"
+    }
 }
 
 allprojects {
